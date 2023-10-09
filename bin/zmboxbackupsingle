@@ -41,9 +41,9 @@ fi
 echo " Backing up content of $mbox ..."
 $zmbox_command -z -m $mbox getRestURL "?fmt=tgz" > $zmbox_dump_dir/$mbox.briefcase.tgz
 
-#************#
+#*************#
 # Change log  #
-#************&#
+#*************#
 
 # 2023-10-09: Changed /etc to be  $ZM_C_EEE_BACKUP_TOOLS_HOME/conf for config file by <prabudhitha@c-eee.org> 
 
