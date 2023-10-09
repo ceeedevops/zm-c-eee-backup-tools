@@ -1,8 +1,10 @@
+#************************************************************#
+#  Zimbra - Backup single email account                      #
+#  Authored by: Chinthaka Deshapriya <chinthaka@c-cee.org>   #
+#  License: GNU GPL3                                         #
+#************************************************************#
+
 #!/bin/bash
-echo "*******************************************************"
-echo "*     Zimbra - Restore single  email account          *"
-echo "*******************************************************"
-echo ""
 
 source /etc/zmboxbackup.conf
 args=2 # Require 2 arguments
@@ -13,6 +15,7 @@ if [ $# -ne 2 ]; then
    echo "Example: zmboxsinglerestore account@maildomain.com fri"
    exit $bad_args
 fi  
+
 day_of_restore=`echo $2 | tr a-z A-Z`
 mbox=$1
 zmbox_dump_dir=$zmbox_backup_dir/$day_of_restore
