@@ -6,7 +6,8 @@ echo "*  License: GNU GPL3                                       *"
 echo "************************************************************"
 echo ""
 
-source  ../conf/zmboxbackup.conf
+source   $ZM_C_EEE_BACKUP_TOOLS_HOME/conf/zmboxbackup.conf
+
 args=1 # Require 1 arguments
 bad_args=85 # Wrong number of arguments passed
 
@@ -27,5 +28,5 @@ echo " Backing up content of $mbox ..."
 $zmbox_command -z -m $mbox getRestURL "?fmt=tgz" > $zmbox_dump_dir/$mbox.briefcase.tgz
 
 # Change log
-# 2023-10-09: Changed /etc to be ../conf for config file by <prabudhitha@c-eee.org> 
+# 2023-10-09: Changed /etc to be  $ZM_C_EEE_BACKUP_TOOLS_HOME/conf for config file by <prabudhitha@c-eee.org> 
 
