@@ -16,9 +16,21 @@ if [ $# -ne 1 ]; then
    echo "Example: zmboxsinglebackup account@maildomain.com"
    exit $bad_args
 fi  
+
+# Create backup directory if it doen't exist
+
+if [[ ! -e $zmbox_backup_dir ]]; then
+    mkdir $zmbox_backup_dir
+elif [[ ! -d $zmbox_backup_dir ]]; then
+    echo "$dir already exists but is not a directory" 1>&2
+fi
+
 today=`date +"%a" | tr a-z A-Z`
+
 zmbox_dump_dir=$zmbox_backup_dir/$today
+
 mbox=$1
+
 zmbox_dump_dir=$zmbox_backup_dir/$today
 if [ ! -d $zmbox_dump_dir ]; then
     mkdir -p $zmbox_dump_dir
