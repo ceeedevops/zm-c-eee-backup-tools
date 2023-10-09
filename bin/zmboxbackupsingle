@@ -1,0 +1,31 @@
+#!/bin/bash
+echo "************************************************************"
+echo "*  Zimbra - Backup single email account                    *"
+echo "*  Authored by  Chinthaka Deshapriya <chinthaka@c-cee.org> *"
+echo "*  License: GNU GPL3                                       *"
+echo "************************************************************"
+echo ""
+
+source  ../conf/zmboxbackup.conf
+args=1 # Require 1 arguments
+bad_args=85 # Wrong number of arguments passed
+
+if [ $# -ne 1 ]; then
+   echo "Usage: Requires Mailbox as an argument"
+   echo "Example: zmboxsinglebackup account@maildomain.com"
+   exit $bad_args
+fi  
+today=`date +"%a" | tr a-z A-Z`
+zmbox_dump_dir=$zmbox_backup_dir/$today
+mbox=$1
+zmbox_dump_dir=$zmbox_backup_dir/$today
+if [ ! -d $zmbox_dump_dir ]; then
+    mkdir -p $zmbox_dump_dir
+fi
+
+echo " Backing up content of $mbox ..."
+$zmbox_command -z -m $mbox getRestURL "?fmt=tgz" > $zmbox_dump_dir/$mbox.briefcase.tgz
+
+# Change log
+# 2023-10-09: Changed /etc to be ../conf for config file by <prabudhitha@c-eee.org> 
+

@@ -1,0 +1,16 @@
+#!/bin/bash
+source /etc/zmboxbackup.conf
+today=`date +"%a" | tr a-z A-Z`
+day=`echo $1 | tr a-z A-Z`
+
+zmbox_dump_dir=$zmbox_backup_dir/$day
+if [ ! -d $zmbox_dump_dir ]; then
+echo "Backups do not exist !"
+exit 255;
+fi
+for mbox in `zmprov -l gaa`
+do
+echo " Restoring files from backup $mbox ..."
+#$zmbox_command -z -m $mbox postRestURL "//?fmt=zip&resolve=reset" $zmbox_dump_dir/$mbox.zip
+$zmbox_command -z -m $mbox postRestURL "?fmt=tgz" $zmbox_dump_dir/$mbox.tgz
+done

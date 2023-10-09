@@ -1,0 +1,70 @@
+#!/bin/bash
+#
+# Script to restore a Zimbra installation (open source version)
+# by using a full backup taken from the LVM snapshot of /opt/zimbra,
+# 
+# Read config
+
+source /etc/zmlvmbackup.conf
+DAY=`echo $1 | tr a-z A-Z` 
+##########################################
+# Do not change anything beyond this point
+##########################################
+
+pause() {
+        if [ -n "$debug" ]; then
+	echo "Press Enter to execute this step..";
+        read input;
+        fi
+        }
+
+say() {
+	MESSAGE_PREFIX="Zimbra LVM Restore : "
+	MESSAGE="$1"
+	TIMESTAMP=$(date +"%F %T")
+	echo -e "$TIMESTAMP $MESSAGE_PREFIX $MESSAGE"
+	logger -t $log_tag -p $log_facility.$log_level "$MESSAGE"
+	logger -t $log_tag -p $log_facility_mail.$log_level "$MESSAGE"
+	pause
+	}
+
+error () {
+	MESSAGE_PREFIX="Zimbra LVM Restore : "
+        MESSAGE="$1"
+	TIMESTAMP=$(date +"%F %T")
+	echo -e $TIMESTAMP $MESSAGE >&2
+	logger -t $log_tag -p $log_facility.$log_level_err "$MESSAGE"
+	logger -t $log_tag -p $log_facility_mail.$log_level_err "$MESSAGE"
+	exit
+	}
+
+# Output date
+say "Started ..."
+
+# Stop the Zimbra services
+say "Stopping the Zimbra services, this may take some time ..."
+/etc/init.d/zimbra stop || error "error stopping Zimbra"
+[ "$(ps -u zimbra -o "pid=")" ] && kill -9 $(ps -u zimbra -o "pid=") #added as a workaround to zimbra bug 18653
+
+# Rename current /opt/zimbra direrctory
+say "Renaming the current installation of Zimbra"
+mv /opt/zimbra /opt/zimbra.old 
+
+# Copying zimbra full backup from from backup directory
+say "Restoring last Zimbra backup"
+cp -Rvp $zm_backup_path/$DAY/zimbra /opt
+
+# Fixing the Zimbra restoration
+say "Recovering Zimbra permissions"
+chown -R zimbra:zimbra /opt/zimbra
+/opt/zimbra/libexec/zmfixperms --verbose --extended
+
+# Start the Zimbra services
+say "Starting the Zimbra services in the background. Please wait..."
+(/etc/init.d/zimbra start && say "Services background startup completed. Press Enter to exit") || error "Services background startup FAILED" &
+
+# Done!
+say "Restoration ended"
+pause
+
+date >$zm_backup_path/lastrestore

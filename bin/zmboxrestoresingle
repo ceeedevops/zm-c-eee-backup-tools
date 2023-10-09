@@ -1,0 +1,25 @@
+#!/bin/bash
+echo "*******************************************************"
+echo "*     Zimbra - Restore single  email account          *"
+echo "*******************************************************"
+echo ""
+
+source /etc/zmboxbackup.conf
+args=2 # Require 2 arguments
+bad_args=85 # Wrong number of arguments passed
+
+if [ $# -ne 2 ]; then
+   echo "Usage: Requires Mailbox and Day of Restore require as arguments"
+   echo "Example: zmboxsinglerestore account@maildomain.com fri"
+   exit $bad_args
+fi  
+day_of_restore=`echo $2 | tr a-z A-Z`
+mbox=$1
+zmbox_dump_dir=$zmbox_backup_dir/$day_of_restore
+if [ ! -d $zmbox_dump_dir ]; then
+echo "Backups do not exist for $day_of_restore!"
+exit 255;
+fi
+
+echo " Restoring contents from backup $mbox ..."
+$zmbox_command -z -m $mbox postRestURL postRestURL "?fmt=tgz" $zmbox_dump_dir/$mbox.tgz

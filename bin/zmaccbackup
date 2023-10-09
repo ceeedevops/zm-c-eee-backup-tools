@@ -1,0 +1,19 @@
+#!/bin/bash
+# Name : zmaccbackup 
+# Purpose : Get all zimbra user accounts and their password hashes user.list file
+
+# Read config
+source /etc/zmacc.conf
+
+# Backup
+echo "Account Backup started"
+
+echo "Generating user list. This may take some time ..."
+for i in `$ZMPROV -l gaa | egrep -v 'galsync|spam|ham|virus|admin'`;do \
+  echo "$i,`$ZMPROV -l ga $i userPassword | grep userPassword | \
+  sed 's/userPassword: //'`";\
+done > $zm_backup_path/$today/user.list
+
+# Done!
+echo "Account backup is successful"
+date >$zm_backup_path/lastsync.userlist

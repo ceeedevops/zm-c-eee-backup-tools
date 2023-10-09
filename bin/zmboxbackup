@@ -1,0 +1,30 @@
+#!/bin/bash
+echo "*******************************************************"
+echo "*     Zimbra - Backup all email accounts              *"
+echo "*******************************************************"
+echo""
+source /etc/zmboxbackup.conf
+#
+echo Start time of the backup = $(date +%T)  
+before="$(date +%s)"
+#
+echo ""
+# Set the permission of zmbox_backup_dir to zimbra user
+chown -R zimbra:zimbra $zmbox_backup_dir
+echo "Generating backup files ..."
+su - zimbra -c "/usr/local/sbin/zmboxbackupall"
+if [ $do_rsync = yes ]; then
+rsync -avH $zmbox_backup_dir root@$remote_ip:/var/backup/zmbox
+echo "Sending files to backup all email accounts for the remote system ..."
+fi
+before2="$(date +%s)"
+#
+echo The process lasted = $(date +%T)
+# Calculating time
+after="$(date +%s)"
+elapsed="$(expr $after - $before)"
+hours=$(($elapsed / 3600))
+elapsed=$(($elapsed - $hours * 3600))
+minutes=$(($elapsed / 60))
+seconds=$(($elapsed - $minutes * 60))
+echo The complete backup lasted : "$hours hours $minutes minutes $seconds seconds"

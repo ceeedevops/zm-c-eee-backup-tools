@@ -1,0 +1,18 @@
+#!/bin/bash
+# Name : zmaccrestore
+# Purpose : Read user.list and restore user passwords
+
+# Read config
+source /etc/zmacc.conf
+
+# Restore
+echo "Account restoration started"
+echo "Restoring user passwords. This may take some time ..."
+
+for i in `cat $zm_backup_path/$today/user.list`;\
+  do $ZMPROV ma `echo $i | \
+  awk -F, '{print $1 " userPassword " $2}'`; \
+done
+
+# Done!
+echo "Account restoration is successful"

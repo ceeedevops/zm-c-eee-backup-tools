@@ -1,0 +1,68 @@
+#!/bin/bash
+echo "********************************************"
+echo "*     Zimbra - Sync backp to DR site       *"
+echo "********************************************"
+echo""
+
+source /etc/zmsynctodr.conf
+
+pause() {
+        if [ -n "$debug" ]; then
+	echo "Press Enter to execute this step..";
+        read input;
+        fi
+        }
+
+say() {
+	MESSAGE_PREFIX="Zimbra DR Sync :"
+	MESSAGE="$1"
+	TIMESTAMP=$(date +"%F %T")
+	echo -e "$TIMESTAMP $MESSAGE_PREFIX $MESSAGE"
+	logger -t $log_tag -p $log_facility.$log_level "$MESSAGE"
+	logger -t $log_tag -p $log_facility_mail.$log_level "$MESSAGE"
+	pause
+}
+
+error () {
+	MESSAGE_PREFIX="Zimbra DR Sync:"
+        MESSAGE="$1"
+	TIMESTAMP=$(date +"%F %T")
+	echo -e $TIMESTAMP $MESSAGE >&2
+	logger -t $log_tag -p $log_facility.$log_level_err "$MESSAGE"
+	logger -t $log_tag -p $log_facility_mail.$log_level_err "$MESSAGE"
+	exit
+	}
+# Output date
+echo Start time of the DR Sync = $(date +%T)  
+before="$(date +%s)"
+# Stop the Zimbra services
+say "Stopping the Zimbra services at DR Site, this may take some time ..."
+ssh root@$zimbra_dr_ip /etc/init.d/zimbra stop || error "error stopping Zimbra"
+for pid in $(ssh root@$zimbra_dr_ip  ps -u zimbra -o "pid="); do ssh root@$zimbra_dr_ip kill -9 $pid; done #added as a workaround to zimbra bug 18653
+#
+echo ""
+#
+say "Sending files to  DR Zimbra system ..."
+#
+rsync -avH $zm_backup_dir root@$zimbra_dr_ip:/opt/
+
+# Fixing the Zimbra restoration
+say "Recovering permissions"
+ssh root@$zimbra_dr_ip chown -R zimbra:zimbra /opt/zimbra
+ssh root@$zimbra_dr_ip /opt/zimbra/libexec/zmfixperms --verbose --extended
+# Start the Zimbra services
+say "Starting the Zimbra services in the background....."
+(ssh root@$zimbra_dr_ip /etc/init.d/zimbra start && say "services background startup completed") || error "services background startup FAILED" &
+
+before2="$(date +%s)"
+#
+echo The process lasted = $(date +%T)
+# Calculating time
+after="$(date +%s)"
+elapsed="$(expr $after - $before)"
+hours=$(($elapsed / 3600))
+elapsed=$(($elapsed - $hours * 3600))
+minutes=$(($elapsed / 60))
+seconds=$(($elapsed - $minutes * 60))
+echo The complete DR sync lasted : "$hours hours $minutes minutes $seconds seconds" 
+date >$zm_backup_dir/lastsynctodr

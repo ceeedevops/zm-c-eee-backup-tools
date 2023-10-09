@@ -1,0 +1,18 @@
+#!/bin/bash
+# Name : zmacccreate
+# Purpose : Read user.list and create new users
+
+# Read config
+source /etc/zmacc.conf
+
+# Restore
+echo "Adding new accounts is started"
+echo "Adding accounts. This may take some time ..."
+
+for i in `cat $zm_backup_path/$today/user.list`;\
+  do $ZMPROV ca `echo $i | \
+  awk -F, '{print $1  " password"}'`; \
+done
+
+# Done!
+echo "Adding new accounts is successful"
