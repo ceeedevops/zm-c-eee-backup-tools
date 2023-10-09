@@ -29,7 +29,8 @@ today=`date +"%a" | tr a-z A-Z`
 
 zmbox_dump_dir=$zmbox_backup_dir/$today
 
-mbox=$1
+# Takes email as a CLI argument
+mbox=$1 
 
 zmbox_dump_dir=$zmbox_backup_dir/$today
 if [ ! -d $zmbox_dump_dir ]; then
