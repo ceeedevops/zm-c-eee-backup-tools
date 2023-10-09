@@ -6,9 +6,10 @@
 
 #!/bin/bash
 
-source /etc/zmboxbackup.conf
-args=2 # Require 2 arguments
-bad_args=85 # Wrong number of arguments passed
+source $ZM_C_EEE_BACKUP_TOOLS_HOME/conf/zmboxbackup.conf
+
+args=2      # Require 2 CLI arguments
+bad_args=85 # Return 85 if incorrect number of CLI arguments are passed
 
 if [ $# -ne 2 ]; then
    echo "Usage: Requires Mailbox and Day of Restore require as arguments"
