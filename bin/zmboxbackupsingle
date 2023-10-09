@@ -41,7 +41,7 @@ fi
 echo " Backing up content of $mbox ..."
 $zmbox_command -z -m $mbox getRestURL "?fmt=tgz" > $zmbox_dump_dir/$mbox.briefcase.tgz
 
-#*********&***#
+#************#
 # Change log  #
 #************&#
 
