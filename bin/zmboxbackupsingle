@@ -1,15 +1,16 @@
+#************************************************************#
+#  Zimbra - Backup single email account                      #
+#  Authored by: Chinthaka Deshapriya <chinthaka@c-cee.org>   #
+#  License: GNU GPL3                                         #
+#************************************************************#
+
 #!/bin/bash
-echo "************************************************************"
-echo "*  Zimbra - Backup single email account                    *"
-echo "*  Authored by  Chinthaka Deshapriya <chinthaka@c-cee.org> *"
-echo "*  License: GNU GPL3                                       *"
-echo "************************************************************"
-echo ""
 
 source   $ZM_C_EEE_BACKUP_TOOLS_HOME/conf/zmboxbackup.conf
 
-args=1 # Require 1 arguments
-bad_args=85 # Wrong number of arguments passed
+# Checking the required no of CLI arguments 
+args=1       # No. of  CLI arguments are required
+bad_args=85  # If the incorrect number of arguments is supplied, return code
 
 if [ $# -ne 1 ]; then
    echo "Usage: Requires Mailbox as an argument"
@@ -40,6 +41,9 @@ fi
 echo " Backing up content of $mbox ..."
 $zmbox_command -z -m $mbox getRestURL "?fmt=tgz" > $zmbox_dump_dir/$mbox.briefcase.tgz
 
-# Change log
+###############
+# Change log  #
+###############
+
 # 2023-10-09: Changed /etc to be  $ZM_C_EEE_BACKUP_TOOLS_HOME/conf for config file by <prabudhitha@c-eee.org> 
 
