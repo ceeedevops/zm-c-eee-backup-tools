@@ -1,5 +1,5 @@
 #************************************************************#
-#  Zimbra: Backup single email account                      #
+#  Zimbra: Backup single email account                    v  #
 #  Authored by: Chinthaka Deshapriya <chinthaka@c-cee.org>   #
 #  name : zmaccbackup                                        #
 #  Purpose : zmuser.list contains a list of all Zimbra user  #
@@ -11,7 +11,7 @@
 
 # Read config
 
-source /etc/zmacc.conf
+source zmacc.conf
 
 # Backup
 echo "Account Backup started"
