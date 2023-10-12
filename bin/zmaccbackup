@@ -1,3 +1,12 @@
+#************************************************************#
+#  Zimbra - Backup single email account                      #
+#  Authored by: Chinthaka Deshapriya <chinthaka@c-cee.org>   #
+#  name : zmaccbackup                                        #
+#  Purpose : zmuser.list contains a list of all Zimbra user  #
+#            accounts and their password hashes.             #    
+#  License:: GNU GPL3                                        #
+# ********************************************************** #
+
 #!/bin/bash
 # Name : zmaccbackup 
 # Purpose : Get all zimbra user accounts and their password hashes user.list file
