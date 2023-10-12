@@ -8,10 +8,9 @@
 # ********************************************************** #
 
 #!/bin/bash
-# Name : zmaccbackup 
-# Purpose : Get all zimbra user accounts and their password hashes user.list file
 
 # Read config
+
 source /etc/zmacc.conf
 
 # Backup
