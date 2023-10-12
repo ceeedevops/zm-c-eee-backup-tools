@@ -25,3 +25,11 @@ done > $zm_backup_path/$today/user.list
 # Done!
 echo "Account backup is successful"
 date >$zm_backup_path/lastsync.userlist
+
+#************#
+# Change log #
+#************#
+#
+#  2023-10-09: Changed /etc to be  $ZM_C_EEE_BACKUP_TOOLS_HOME/conf for config file by <prabudhitha@c-eee.org> 
+
+
