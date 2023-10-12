@@ -11,7 +11,7 @@
 
 # Read config
 
-source zmacc.conf
+source $ZM_C_EEE_BACKUP_TOOLS_HOME/zmacc.conf
 
 # Backup
 echo "Account Backup started"
